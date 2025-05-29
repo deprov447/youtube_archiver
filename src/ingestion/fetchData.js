@@ -5,6 +5,15 @@ let { apikey, failoverApiKey } = require("./apiKeyFailover");
 const videoTSSchema = require("../models/VideoTs");
 
 async function callYTAPI(publishedAfter, pageToken) {
+  const fs = require("fs");
+  const path = require("path");
+  if (process.env.TEST_MODE === "true") {
+    const mockData = fs.readFileSync(
+      path.join(__dirname, "mockdata.json"),
+      "utf-8" 
+    );
+    return JSON.parse(mockData);
+  }
   try {
     let config = {
       method: "GET",
