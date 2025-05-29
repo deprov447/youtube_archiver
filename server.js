@@ -4,16 +4,17 @@ const dotenv = require("dotenv").config();
 
 const router = require("./routes");
 const bootstrapIngestion = require("./src/ingestion/bootstrapIngestion");
+const createTSSchema = require("./src/ingestion/createTsSchema");
 
 mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const PORT = process.env.PORT || 4000;
-
+createTSSchema()
 bootstrapIngestion(10);
 
+const PORT = process.env.PORT || 4000;
 express()
   .use(router)
   .listen(PORT, () => {

@@ -1,6 +1,8 @@
 const axios = require("axios");
+const tsclient = require("../tsClient");
 const Video = require("../models/Video");
 let { apikey, failoverApiKey } = require("./apiKeyFailover");
+const videoTSSchema = require("../models/VideoTs");
 
 async function callYTAPI(publishedAfter, pageToken) {
   try {
@@ -71,6 +73,14 @@ async function fetchData(publishedAfter) {
       nextPageToken &&
       pagesTraversed < process.env.MAX_PAGES_TO_TRAVERSE
     );
+
+    await parsedYTRes.forEach(async (video) => {
+      await tsclient.collections(videoTSSchema["name"]).documents().upsert({
+        title: video.title,
+        id: video._id,
+      });
+    });
+
     await Video.insertMany(parsedYTRes, { ordered: false }).catch((err) => {
       if (err.code !== 11000) console.error(err);
     });
