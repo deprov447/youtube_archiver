@@ -1,7 +1,10 @@
 const fetchData = require("./fetchData");
 
 function bootstrapIngestion(timeInterval){
-    setInterval(fetchData, timeInterval);
+    setInterval(()=>{
+        const publishedAfter = new Date(Date.now() - 60 * 1000).toISOString();
+        fetchData(publishedAfter)
+    }, timeInterval*1000);
 }
 
 module.exports = bootstrapIngestion
