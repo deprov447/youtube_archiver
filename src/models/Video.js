@@ -11,7 +11,7 @@ const Video = mongoose.model(
   mongoose.Schema({
     _id: String,
     title: { type: String, required: true },
-    description: { type: Date, required: false },
+    description: { type: String, required: false },
     publishedAt: { type: Date, required: true },
     thumbnails: {
       default: thumbnailSchema,

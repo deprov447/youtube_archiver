@@ -1,3 +1,11 @@
+/*
+  Note: 
+  - Do not import apiKey from this module as const. It needs to rotate.
+  - failoverApiKey() does not check whether key is usable or not. Caller 
+    method needs to check that, this function just changes the apiKey 
+    globally.
+*/
+
 let { apikey } = require("./apiKeyFailover");
 
 function failoverApiKey() {
@@ -13,12 +21,12 @@ function failoverApiKey() {
     }
   }
   if (indexOfCurrentKey == allkeys.length - 1) {
-    console.log("Quota for all keys expired");
+    throw("Quota for all keys expired")
   } else {
-    console.log('Moving to next API key')
-    apikey = allkeys[indexOfCurrentKey+1][1]
+    console.log("Moving to next API key");
+    apikey = allkeys[indexOfCurrentKey + 1][1];
   }
-  return apikey
+  return apikey;
 }
 
 module.exports = { failoverApiKey, apikey: process.env.API_KEY_1 };

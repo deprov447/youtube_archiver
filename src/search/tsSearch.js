@@ -4,7 +4,7 @@ const tsclient = require("../tsClient");
 async function tssearch(query) {
   let searchParameters = {
     q: query,
-    query_by: "title",
+    query_by: "title,description",
   };
 
   return await tsclient

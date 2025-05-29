@@ -7,10 +7,11 @@ const videoTSSchema = require("../models/VideoTs");
 async function callYTAPI(publishedAfter, pageToken) {
   const fs = require("fs");
   const path = require("path");
+  // A short circuit to mock real YT API during development
   if (process.env.TEST_MODE === "true") {
     const mockData = fs.readFileSync(
       path.join(__dirname, "mockdata.json"),
-      "utf-8" 
+      "utf-8"
     );
     return JSON.parse(mockData);
   }
@@ -55,6 +56,7 @@ async function callYTAPI(publishedAfter, pageToken) {
   }
 }
 
+// Paginated function to get data from youtube
 async function fetchData(publishedAfter) {
   try {
     console.log("Fetching YT data published after: " + publishedAfter);
@@ -83,13 +85,16 @@ async function fetchData(publishedAfter) {
       pagesTraversed < process.env.MAX_PAGES_TO_TRAVERSE
     );
 
+    // Pushes data to typesense
     await parsedYTRes.forEach(async (video) => {
       await tsclient.collections(videoTSSchema["name"]).documents().upsert({
         title: video.title,
         id: video._id,
+        description: video.description,
       });
     });
 
+    // Pushed data to DB
     await Video.insertMany(parsedYTRes, { ordered: false }).catch((err) => {
       if (err.code !== 11000) console.error(err);
     });

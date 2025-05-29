@@ -1,6 +1,7 @@
 const videoTSSchema = require("../models/VideoTs");
 const tsclient = require("../tsClient");
 
+// Checks whether the typesense schema exists or not. If not, it creates one
 async function createTSSchema() {
   const collectionsList = await tsclient.collections().retrieve();
   var toCreate = collectionsList.find((value, _, __) => {
@@ -12,4 +13,4 @@ async function createTSSchema() {
   }
 }
 
-module.exports = createTSSchema
+module.exports = createTSSchema;

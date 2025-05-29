@@ -3,7 +3,8 @@ let videoTSSchema = {
   fields: [
     { name: "title", type: "string" },
     { name: "id", type: "string" },
+    { name: "description", type: "string" },
   ],
 };
 
-module.exports = videoTSSchema
+module.exports = videoTSSchema;

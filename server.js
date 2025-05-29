@@ -11,7 +11,7 @@ mongoose.connect(process.env.DB_URI, {
   useUnifiedTopology: true,
 });
 
-createTSSchema()
+createTSSchema();
 bootstrapIngestion(10);
 
 const PORT = process.env.PORT || 4000;
