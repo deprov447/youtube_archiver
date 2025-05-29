@@ -1,4 +1,5 @@
 const axios = require("axios");
+const Video = require("../models/Video");
 
 async function callYTAPI(publishedAfter, pageToken) {
   let config = {
@@ -8,7 +9,7 @@ async function callYTAPI(publishedAfter, pageToken) {
       Accept: "application/json",
     },
     params: {
-      q: "football",
+      q: "official",
       part: "snippet",
       maxResults: process.env.MAX_RESULTS_PER_PAGE || 5,
       order: "date",
@@ -32,6 +33,7 @@ async function callYTAPI(publishedAfter, pageToken) {
 }
 
 async function fetchData(publishedAfter) {
+    console.log('Fetching YT data published after: '+publishedAfter)
     let parsedYTRes = []
     let nextPageToken = null
     let pagesTraversed = 0
@@ -40,7 +42,7 @@ async function fetchData(publishedAfter) {
         pagesTraversed++;
         parsedYTRes = ytRes.items.map(({id, snippet})=>{
             return {
-                id: id.videoId,
+                videoId: id.videoId,
                 title: snippet.title,
                 description: snippet.description,
                 publishedAt: snippet.publishedAt,
@@ -49,8 +51,7 @@ async function fetchData(publishedAfter) {
         })
         nextPageToken = ytRes.nextPageToken || null
     } while (nextPageToken && pagesTraversed < process.env.MAX_PAGES_TO_TRAVERSE);
-    // db save
-    console.log(parsedYTRes)
+    await Video.insertMany(parsedYTRes, {ordered: false})
 }
 
 module.exports = fetchData;
