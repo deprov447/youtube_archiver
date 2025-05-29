@@ -9,7 +9,7 @@ const thumbnailSchema = new mongoose.Schema({
 const Video = mongoose.model(
   "Video",
   mongoose.Schema({
-    videoId: { type: String, required: true },
+    _id: String,
     title: { type: String, required: true },
     description: { type: Date, required: false },
     publishedAt: { type: Date, required: true },
