@@ -5,14 +5,20 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-  typesense:
-    image: typesense/typesense:28.0
-    restart: on-failure
+    networks:
+      - app-net
+
+  app:
+    build: .
     ports:
-      - "8108:8108"
-    volumes:
-      - ./typesense-data:/data
-    command: "--data-dir /data --api-key=xyz --enable-cors"
+      - "4000:4000"
+    env_file:
+      - .env.prod
+    networks:
+      - app-net
 
 volumes:
   mongo-data:
+
+networks:
+  app-net:

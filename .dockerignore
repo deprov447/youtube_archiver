@@ -1,0 +1,7 @@
+node_modules
+typesense-data
+.git
+.env
+.gitignore
+docker-compose.yml
+Dockerfile
